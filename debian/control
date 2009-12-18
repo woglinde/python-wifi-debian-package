@@ -1,0 +1,16 @@
+Source: python-wifi 
+Section: python
+Priority: optional
+Maintainer: Henning Heinold <heinold@inf.fu-berlin.de>
+Uploaders: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>
+Build-Depends: debhelper (>= 5.0.38), cdbs (>=0.4.43), python-all-dev, python-support (>= 0.3), python-setuptools
+Standards-Version: 3.8.3
+Homepage: http://pythonwifi.wikispot.org/
+
+Package: python-wifi
+Architecture: all
+Depends: ${python:Depends}, ${misc:Depends}
+Description: wrapper for libiw
+ python-wifi offers access of wireless features
+ based on libiw.
+
