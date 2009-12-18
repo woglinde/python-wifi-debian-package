@@ -6,7 +6,5 @@ DEB_PYTHON_SYSTEM=pysupport
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/python-distutils.mk
 
-DEB_DH_INSTALL_SOURCEDIR := debian/tmp
+DEB_DESTDIR = debian/tmp
 
-clean::
-	-rm -rf build
