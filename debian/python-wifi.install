@@ -1,5 +1,5 @@
 debian/tmp/usr/docs/logos usr/share/python-wifi
-debian/tmp/usr/examples usr/share/python-wifi
+debian/tmp/usr/examples usr/share/doc/python-wifi
 debian/tmp/usr/lib
 debian/tmp/usr/man usr/share
 debian/tmp/usr/README usr/share/doc/python-wifi
