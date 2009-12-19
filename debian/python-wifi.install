@@ -5,7 +5,6 @@ debian/tmp/usr/man usr/share
 debian/tmp/usr/README usr/share/doc/python-wifi
 debian/tmp/usr/docs/AUTHORS usr/share/doc/python-wifi
 debian/tmp/usr/docs/BUGS usr/share/doc/python-wifi
-debian/tmp/usr/docs/ChangeLog usr/share/doc/python-wifi/changelog
 debian/tmp/usr/docs/DEVEL.txt usr/share/doc/python-wifi
 debian/tmp/usr/docs/feature_matrix_iwconfig.py.txt usr/share/doc/python-wifi
 debian/tmp/usr/docs/feature_matrix_iwlist.py.txt usr/share/doc/python-wifi
