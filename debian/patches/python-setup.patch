@@ -1,0 +1,13 @@
+Index: python-wifi-0.5/setup.py
+===================================================================
+--- python-wifi-0.5.orig/setup.py	2009-12-22 17:40:03.282462681 +0100
++++ python-wifi-0.5/setup.py	2009-12-22 17:40:35.102459410 +0100
+@@ -1,7 +1,5 @@
+ # -*- coding: utf-8 -*-
+-from distutils.core import setup
+-from ez_setup import use_setuptools
+-use_setuptools()
++from setuptools import setup
+ 
+ setup(
+     name = "python-wifi",
