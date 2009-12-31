@@ -3,8 +3,9 @@
 #export DH_VERBOSE=1
 DEB_PYTHON_SYSTEM=pysupport
 
+include /usr/share/quilt/quilt.make
 include /usr/share/cdbs/1/rules/debhelper.mk
-include /usr/share/cdbs/1/rules/patchsys-quilt.mk
+#include /usr/share/cdbs/1/rules/patchsys-quilt.mk
 include /usr/share/cdbs/1/class/python-distutils.mk
 
 DEB_DESTDIR = debian/tmp
@@ -14,4 +15,4 @@ get-orig-source:
 	-uscan --download-version $(DEB_UPSTREAM_VERSION) --force-download --rename
 
 binary-post-install/python-wifi::
-	gzip -9 debian/python-wifi/usr/share/doc/python-wifi/changelog
+	dh_compress -Xdebian/python-wifi/usr/share/doc/python-wifi/changelog
