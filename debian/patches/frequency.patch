@@ -1,0 +1,196 @@
+# patch was provided and has copyright Matthias Philipp <mphilipp@inf.fu-berlin.de>
+
+--- python-wifi-0.5.orig/pythonwifi/iwlibs.py	2009-12-16 14:18:38.000000000 +0100
++++ python-wifi-0.5/pythonwifi/iwlibs.py	2009-12-22 14:30:01.000000000 +0100
+@@ -124,6 +124,42 @@
+     """ Convert hex string to integer. """
+     return int(hexstring, 16)
+ 
++def freq2channel(freq, iwrange):
++    """Returns the channel for the given frequency.
++
++    Analogous to iw_freq_to_channel from iwlib. 
++    """
++    # Check if it's a frequency or not already a channel
++    if freq < KILO:
++        return -1
++    # find the frequency in the range and return its index
++    for iwfreq in iwrange.iwfreqs:
++        if freq == iwfreq.getFrequency():
++            return iwfreq.index
++    # not found
++    return -2
++
++def channel2freq(channel, iwrange):
++    """Returns the frequency for the given channel.
++
++    Analogous to iw_channel_to_freq from iwlib. 
++    """
++    has_freq = False
++    # Check if the driver supports only channels or if it has frequencies
++    for iwfreq in iwrange.iwfreqs:
++        if iwfreq.e != 0 or iwfreq.m > KILO:
++            has_freq = True
++            break
++    if not has_freq:
++        return -1
++    # find the channel in the range and return its frequency 
++    for iwfreq in iwrange.iwfreqs:
++        if channel == iwfreq.index:
++            return iwfreq.getFrequency()
++    # not found
++    return -2
++
++
+ 
+ class Wireless(object):
+     """ Provides high-level access to wireless interfaces.
+@@ -465,24 +501,84 @@
+         iwfreq = self.wireless_info.getFrequency()
+         return self._formatFrequency(iwfreq.getFrequency())
+ 
++    def getChannel(self):
++        """Returns the channel that the card is currently tuned to.
++        """
++        freq = self.wireless_info.getFrequency().getFrequency()
++        iwrange = Iwrange(self.ifname)
++        channel = freq2channel(freq, iwrange)
++        if channel == -1:
++            # frequency already seems to be a channel
++            return freq
++        if channel == -2:
++            # channel could not be determined (i.e. frequency not in range)
++            raise ValueError("Frequency %d cannot be converted into channel" % freq)
++        return channel
++
+     def setFrequency(self, freq):
+-        """ Sets the frequency on the card.
++        """Tunes the interface to the given frequency.
+ 
+-           translated from iwconfig.c
++        The frequency can be specified in various formats, e.g.:
++
++            >>> from pythonwifi.iwlibs import Wireless
++            >>> wifi = Wireless("wlan1")
++            >>> wifi.setFrequency("auto")
++            >>> wifi.getFrequency()
++            '5.180 GHz'
++            >>> wifi.setFrequency(5200000000)
++            >>> wifi.getFrequency()
++            '5.200 GHz'
++            >>> wifi.setFrequency("fixed")
++            >>> wifi.getFrequency()
++            '5.200 GHz'
++            >>> wifi.setFrequency("5220000000")
++            >>> wifi.getFrequency()
++            '5.220 GHz'
++            >>> wifi.setFrequency("5.24 GHz")
++            >>> wifi.getFrequency()
++            '5.240 GHz'
++            >>> wifi.setFrequency("5.18G")
++            >>> wifi.getFrequency()
++            '5.180 GHz'
++            >>> wifi.setFrequency("5180 M")
++            >>> wifi.getFrequency()
++            '5.180 GHz'
+ 
+         """
+         iwstruct = Iwstruct()
++        # check the frequency argument
+         if freq == "auto":
+             iwreq = iwstruct.pack("ihBB", -1, 0, 0, pythonwifi.flags.IW_FREQ_AUTO)
+-        else:
+-            if freq == "fixed":
+-                freq = self.getFrequency()
+-            freq_pattern = re.compile("([\d\.]+)(\w)", re.I|re.M|re.S)
+-            freq_match = freq_pattern.search(freq)
+-            freq_num, unit = freq_match.groups()
+-            if unit == "G": freq_num = float(freq_num) * GIGA
+-            if unit == "M": freq_num = float(freq_num) * MEGA
+-            if unit == "k": freq_num = float(freq_num) * KILO
++        # must be either long, int, or str
++        elif isinstance(freq, long) or isinstance(freq, int) or isinstance(freq, str):
++            if isinstance(freq, long) or isinstance(freq, int):
++                # argument seems to be a raw frequency value
++                freq_num = freq
++            elif isinstance(freq, str):
++                # argument has to be parsed
++                if freq == "fixed":
++                    freq = self.getFrequency()
++                freq_pattern = re.compile("([\d\.]+)\s*(\w)?", re.I|re.M|re.S)
++                freq_match = freq_pattern.search(freq)
++                freq_num, unit = freq_match.groups()
++                # calculate the raw frequency
++                if unit == "G": 
++                    freq_num = float(freq_num) * GIGA
++                elif unit == "M": 
++                    freq_num = float(freq_num) * MEGA
++                elif unit == "K": 
++                    freq_num = float(freq_num) * KILO
++                else:
++                    freq_num = long(freq_num)
++            # now we should have the raw frequency value, check if it's valid
++            valid = False
++            for iwfreq in Iwrange(self.ifname).iwfreqs:
++                if freq_num == iwfreq.getFrequency():
++                    valid = True
++                    break;
++            if not valid:
++                raise ValueError("Invalid frequency value! Use getChannelInfo() to get valid frequencies.")
++            # calculate the parameters for the ioctl call
+             e = math.floor(math.log10(freq_num))
+             if e > 8:
+                 m = int(math.floor(freq_num / math.pow(10, e - 6))) * 100
+@@ -491,9 +587,35 @@
+                 m = int(math.floor(freq_num))
+                 e = 0
+             iwreq = iwstruct.pack("ihBB", m, e, 0, pythonwifi.flags.IW_FREQ_FIXED)
+-        status, result = iwstruct.iw_set_ext(self.ifname,
+-                                               pythonwifi.flags.SIOCSIWFREQ,
+-                                               iwreq)
++        else:
++            raise ValueError("Invalid frequency value! Either specify the raw frequency as long (e.g. 5200000000), or pass a string in the form '5.20 GHz' or '5.2G'.")
++        # actually try to set the frequency
++        try:
++            status, result = iwstruct.iw_set_ext(self.ifname,
++                                           pythonwifi.flags.SIOCSIWFREQ,
++                                           iwreq)
++        except IOError:
++            print "Unable to set frequency %d although it seems valid." % freq_num
++            print "This is likely to be a regulatory issue (e.g some channels are not allowed in ad-hoc mode)."
++            raise
++
++
++    def setChannel(self, channel):
++        """Translates the given channel to the corresponding frequency and
++        tunes the interface to it.
++        """
++        iwrange = Iwrange(self.ifname)
++        freq = channel2freq(channel, iwrange)
++        if freq == -1:
++            # driver does not support frequencies, therefore we try to set the
++            # channel directly
++            self.setFrequency(channel)
++        elif freq == -2:
++            # frequency could not be determined (i.e. channel not in range)
++            raise ValueError("Channel %d cannot be converted into frequency" %
++                             channel)
++        else:
++            self.setFrequency(freq)
+ 
+     def getMode(self):
+         """ Returns currently set operation mode.
+@@ -1340,10 +1462,13 @@
+         self.num_channels = result[94]
+         self.num_frequency = result[95]
+ 
++        self.iwfreqs = list()
++
+         freq = result[96:224]
+         i = self.num_frequency
+         for x in range(0, len(freq), 4):
+             iwfreq = Iwfreq(freq[x:x+4])
++            self.iwfreqs.append(iwfreq)
+             fq = iwfreq.getFrequency()
+             if fq is not None:
+                 self.frequencies.append(fq)
