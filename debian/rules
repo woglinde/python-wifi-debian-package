@@ -9,5 +9,8 @@ include /usr/share/cdbs/1/class/python-distutils.mk
 DEB_DESTDIR = debian/tmp
 DEB_INSTALL_CHANGELOGS_ALL := debian/tmp/usr/docs/ChangeLog
 
+get-orig-source:
+	-uscan --download-version $(DEB_UPSTREAM_VERSION) --force-download --rename
+
 binary-post-install/python-wifi::
 	gzip -9 debian/python-wifi/usr/share/doc/python-wifi/changelog
