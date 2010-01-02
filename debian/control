@@ -12,7 +12,7 @@ Package: python-wifi
 Architecture: all
 Depends: ${python:Depends}, ${misc:Depends}
 XB-Python-Version: ${python:Versions}
-Description: wrapper for libiw
- python-wifi offers access of wireless features
- based on libiw.
-
+Description: Linux Wireless Extensions in Pure Python
+ Python WiFi is a Python module that provides read and write 
+ access to a wireless network card's capabilities using 
+ the Linux Wireless Extensions.
