@@ -2,7 +2,7 @@ Source: python-wifi
 Section: user/network
 Priority: optional
 Maintainer: Henning Heinold <heinold@inf.fu-berlin.de>
-Build-Depends: debhelper (>= 5.0.38), cdbs (>=0.4.43), python-all-dev, python-support (>= 0.5.3), python-setuptools
+Build-Depends: debhelper (>= 5.0.38), cdbs (>=0.4.43), quilt, python-all-dev, python-support (>= 0.5.3), python-setuptools
 Standards-Version: 3.8.3
 XS-Python-Version: all
 Homepage: http://pythonwifi.wikispot.org/
@@ -11,7 +11,7 @@ Package: python-wifi
 Architecture: all
 Depends: ${python:Depends}, ${misc:Depends}
 XB-Python-Version: ${python:Versions}
-Description: wrapper for libiw
- python-wifi offers access of wireless features
- based on libiw.
-
+Description: Linux Wireless Extensions in Pure Python
+ Python WiFi is a Python module that provides read and write 
+ access to a wireless network card's capabilities using 
+ the Linux Wireless Extensions.
