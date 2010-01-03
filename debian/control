@@ -9,7 +9,7 @@ XS-Python-Version: all
 Homepage: http://pythonwifi.wikispot.org/
 
 Package: python-wifi
-Architecture: all
+Architecture: any
 Depends: ${python:Depends}, ${misc:Depends}
 XB-Python-Version: ${python:Versions}
 Description: Linux Wireless Extensions in Pure Python
