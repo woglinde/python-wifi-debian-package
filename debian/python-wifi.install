@@ -1,6 +1,6 @@
 debian/tmp/scratchbox/tools/docs/logos usr/share/python-wifi
 debian/tmp/scratchbox/tools/examples usr/share/doc/python-wifi
-debian/tmp/scratchbox/tools/usr/lib
+debian/tmp/scratchbox/tools/lib usr/
 debian/tmp/scratchbox/tools/man usr/share
 debian/tmp/scratchbox/tools/README usr/share/doc/python-wifi
 debian/tmp/scratchbox/tools/docs/AUTHORS usr/share/doc/python-wifi
