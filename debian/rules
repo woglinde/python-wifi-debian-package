@@ -12,7 +12,7 @@ DEB_DESTDIR = debian/tmp
 DEB_INSTALL_CHANGELOGS_ALL := debian/tmp/usr/docs/ChangeLog
 
 get-orig-source:
-	-uscan --download-version $(DEB_UPSTREAM_VERSION) --force-download --rename
+	-uscan --repack --download-version $(DEB_UPSTREAM_VERSION) --force-download --rename
 
 binary-post-install/python-wifi::
 	dh_compress -Xdebian/python-wifi/usr/share/doc/python-wifi/changelog
