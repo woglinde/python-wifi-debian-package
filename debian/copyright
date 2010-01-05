@@ -12,11 +12,14 @@ Copyright:
 
    Copyright (c) 2005-2009 Roman Joost
                  2009 Sean Robinson
+   Portions Copyright 1996-2006 Jean Tourrilhes for iwconfig.py and iwlist.py
 
 License:
 
-    python-wifi is licensed under LGPLv2.1+, however, the examples
-    (iwconfig.py and iwlist.py) are licensed under GPLv2+.
+    python-wifi/* is licensed under the LGPLv2.1+
+    examples/* are licensed under the GPLv2+
+    tests/* are licensed under the GPLv2+
+    logos/* are licensed under the Creative Commons Attribution License
 
     On Debian GNU/Linux systems, the complete texts of the GNU General
     Public License and the GNU Lesser General Public License can be found
