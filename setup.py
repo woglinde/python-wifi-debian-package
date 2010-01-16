@@ -15,7 +15,7 @@ wireless network card's capabilities using the Linux Wireless Extensions.""",
     url = "http://pythonwifi.wikispot.org/",
     packages = ['pythonwifi'],
 
-    data_files=[('', ['README']),
+    data_files=[('', ['README', 'INSTALL']),
                 ('examples', ['examples/iwlist.py', 'examples/iwconfig.py']),
                 ('docs', ['docs/AUTHORS', 'docs/BUGS', 'docs/LICENSE.GPL',
                           'docs/LICENSE.LGPL', 'docs/NEWS', 'docs/ROADMAP',
