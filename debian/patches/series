@@ -1,2 +1,3 @@
+dont_package_install.patch
 python-setup.patch
 frequency.patch

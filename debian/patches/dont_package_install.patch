@@ -1,0 +1,13 @@
+Index: python-wifi-0.5/setup.py
+===================================================================
+--- python-wifi-0.5.orig/setup.py	2010-01-16 01:05:30.395663485 +0100
++++ python-wifi-0.5/setup.py	2010-01-16 01:06:13.952331345 +0100
+@@ -15,7 +15,7 @@
+     url = "http://pythonwifi.wikispot.org/",
+     packages = ['pythonwifi'],
+ 
+-    data_files=[('', ['README', 'INSTALL']),
++    data_files=[('', ['README']),
+                 ('examples', ['examples/iwlist.py', 'examples/iwconfig.py']),
+                 ('docs', ['docs/AUTHORS', 'docs/BUGS', 'docs/LICENSE.GPL',
+                           'docs/LICENSE.LGPL', 'docs/NEWS', 'docs/ROADMAP',
