@@ -1,5 +1,6 @@
 python-wifi (0.5.0-1) unstable; urgency=low
 
+  * Initial debian release. Closes: #563865 (ITP)
   * new upstream version
   * remove egg-INSTALL file, because its wasting space
   * fix installation directories
